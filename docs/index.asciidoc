@@ -1,0 +1,31 @@
+[[kibana-guide]]
+= Kibana User Guide
+
+:ref: http://www.elastic.co/guide/en/elasticsearch/reference/current/
+:shield: https://www.elastic.co/guide/en/shield/current
+:k4issue: https://github.com/elastic/kibana/issues/
+:k4pull: https://github.com/elastic/kibana/pull/
+:version: 4.5
+:esversion: 2.3
+
+include::introduction.asciidoc[]
+
+include::setup.asciidoc[]
+
+include::getting-started.asciidoc[]
+
+include::plugins.asciidoc[]
+
+include::access.asciidoc[]
+
+include::discover.asciidoc[]
+
+include::visualize.asciidoc[]
+
+include::dashboard.asciidoc[]
+
+include::settings.asciidoc[]
+
+include::production.asciidoc[]
+
+include::releasenotes.asciidoc[]
