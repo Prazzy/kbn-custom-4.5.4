@@ -1,0 +1,25 @@
+<div
+  class="fe-expression fe-expression-{{::clause}}">
+
+    <span ng-repeat="(filterType, fields) in filter.query">
+      <div ng-repeat="(fieldName, value) in fields" class="row">
+        <div class="col-xs-11">
+          <div class="fe-inputs">
+            <select
+              ng-model="fieldName"
+              ng-change="changeField(fieldName)"
+              ng-options="name for name in indexFieldNames"
+              class="fe-field form-control">
+            </select>
+
+            <div class="fe-query-container">
+              <input
+                ng-if="value | isObject"
+                ng-model="value.query"
+                class="fe-query form-control" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+</div>

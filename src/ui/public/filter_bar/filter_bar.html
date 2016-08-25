@@ -1,11 +1,5 @@
 <div class="confirm" ng-show="newFilters.length">
   <form ng-submit="applyFilters(newFilters)">
-  <ul class="list-unstyled">
-    <li>Apply these filters?</li>
-    <li ng-repeat="filter in newFilters" class="filter" ng-click="filter.meta.apply = !filter.meta.apply"><input type="checkbox" ng-checked="filter.meta.apply"/> {{ filter.meta.key }}: {{ filter.meta.value }}</li>
-    <li ng-if="changeTimeFilter" class="changeTimeFilter filter" ng-click="changeTimeFilter.meta.apply = !changeTimeFilter.meta.apply"><input type="checkbox" ng-checked="changeTimeFilter.meta.apply"/> <strong>Change time to:</strong> {{changeTimeFilter.meta.value}} </li>
-    <li><button class="btn btn-xs btn-primary">Apply Now</button> or <a ng-click="clearFilterBar();">Cancel</a></li>
-  </ul>
   </form>
 </div>
 
@@ -52,9 +46,29 @@
           type="text"
           class="form-control">
       </div>
+      <div>
+        <ul class="nav nav-tabs">
+          <li role="editor" ng-class="{ active: editor === 'visual' }">
+            <a ng-click="editor = 'visual'">Visual</a>
+          </li>
+
+          <li role="editor" ng-class="{ active: editor === 'json' }">
+            <a ng-click="editor = 'json'">Advanced</a>
+          </li>
+        </ul>
+      </div>
+
+      <filter-editor
+        ng-if="editor === 'visual'"
+        index-pattern="editingFilter.source.meta.index"
+        filter="editingFilter.model">
+      </filter-editor>
+
+
       <div
         json-input
         require-keys="true"
+        ng-if="editor === 'json'"
         ui-ace="{
           mode: 'json',
           onLoad: aceLoaded
@@ -72,11 +86,6 @@
 
   <div class="filter-link">
     <div class="filter-description small">
-      <a ng-click="showFilterActions = !showFilterActions">
-        Actions
-        <i class="fa"
-        ng-class="{'fa-caret-down': showFilterActions, 'fa-caret-right': !showFilterActions}"></i>
-      </a>
     </div>
   </div>
 </div>

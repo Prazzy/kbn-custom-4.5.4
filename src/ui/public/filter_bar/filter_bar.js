@@ -15,6 +15,7 @@ define(function (require) {
     var filterAppliedAndUnwrap = require('ui/filter_bar/lib/filterAppliedAndUnwrap');
     var changeTimeFilter = Private(require('ui/filter_bar/lib/changeTimeFilter'));
     var queryFilter = Private(require('ui/filter_bar/query_filter'));
+    var filterEditor = require('ui/filter_editor/filter_editor');
     var privateFilterFieldRegex = /(^\$|meta)/;
 
     return {
@@ -39,6 +40,7 @@ define(function (require) {
         });
 
         $scope.state = getAppState();
+        $scope.editor = 'visual';
 
         $scope.aceLoaded = function (editor) {
           editor.$blockScrolling = Infinity;
@@ -120,7 +122,7 @@ define(function (require) {
             Promise.resolve(filters).then(function (filters) {
               extractTimeFilter(filters)
               .then(function (timeFilter) {
-                if (timeFilter) changeTimeFilter(timeFilter);
+                if (timeFilter) changeTimeFilter(timeFilter);base.lebase
               });
               return filters;
             })
