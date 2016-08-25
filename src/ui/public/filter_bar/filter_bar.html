@@ -10,7 +10,8 @@
 </div>
 
 <div class="bar" ng-show="filters.length">
-  <div class="filter" ng-class="{ negate: filter.meta.negate, disabled: filter.meta.disabled }" ng-repeat="filter in filters">
+  <span ng-repeat="filter in filters">
+  <div class="filter" ng-class="{ negate: filter.meta.negate, disabled: filter.meta.disabled }" ng-if="!filter.meta.hide">
     <div class="filter-description">
       <span ng-if="filter.$state.store == 'globalState'"><i class="fa fa-fw fa-thumb-tack pinned"></i></span>
       <span ng-if="filter.meta.alias">{{ filter.meta.alias }}</span>
@@ -38,6 +39,7 @@
       </a>
     </div>
   </div>
+  </span>
 
   <div class="filter-edit-container" ng-if="editingFilter">
     <form role="form" name="editFilterForm" ng-submit="editDone()">

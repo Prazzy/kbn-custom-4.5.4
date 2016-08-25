@@ -5,7 +5,7 @@ define(function (require) {
     var $ = require('jquery');
 
     var Chart = Private(require('ui/vislib/visualizations/_chart'));
-    var TileMapMap = Private(require('ui/vislib/visualizations/_map'));
+    var TileMapMap = require('ui/vislib/visualizations/_map');
 
     /**
      * Tile Map Visualization: renders maps

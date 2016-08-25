@@ -28,6 +28,8 @@ function TabCollection(opts = {}) {
     tabs = _.map(specs, function (spec) {
       return new Tab(_.defaults({}, spec, defaults));
     });
+    let { href } = window.location;
+    this.consumeRouteUpdate(href, true);
   };
 
   this.getActive = function () {

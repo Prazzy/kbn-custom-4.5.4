@@ -11,7 +11,7 @@ define(function (require) {
   require('ui/doc_table/components/table_row');
 
   require('ui/modules').get('kibana')
-  .directive('docTable', function (config, Notifier, getAppState) {
+  .directive('docTable', function (config, Notifier, getAppState, Private) {
     return {
       restrict: 'E',
       template: html,
@@ -24,7 +24,65 @@ define(function (require) {
         infiniteScroll: '=?',
         filter: '=?',
       },
-      link: function ($scope) {
+      controllerAs: 'docTableCSV',
+      controller: function ($scope) {
+        var SearchSource = Private(require('ui/courier/data_source/search_source'));
+        var self = this;
+
+        self._saveAs = require('@spalger/filesaver').saveAs;
+        self.csv = {
+          separator: config.get('csv:separator'),
+          quoteValues: config.get('csv:quoteValues')
+        };
+
+        self.exportAsCsv = function (formatted) {
+          var searchSource = new SearchSource();
+          searchSource.set('filter', $scope.searchSource.getOwn('filter')); 
+          searchSource.set('query', $scope.searchSource.getOwn('query'));
+          searchSource.size(10000);
+          searchSource.index($scope.searchSource.get('index'));
+          searchSource.onResults().then(function onResults(resp) {
+
+            // Abort if something changed
+            if ($scope.searchSource !== $scope.searchSource) return;
+
+            var csv = new Blob([self.toCsv(formatted, resp.hits.hits)], { type: 'text/plain' });
+            self._saveAs(csv, 'download.csv');
+
+          }).catch(notify.fatal);
+          searchSource.fetchQueued();
+        };
+
+        self.toCsv = function (formatted, rows) {
+          var csv = [];
+          //var rows = $scope.hits;
+          var columns = $scope.columns;
+          var nonAlphaNumRE = /[^a-zA-Z0-9]/;
+          var allDoubleQuoteRE = /"/g;
+
+          function escape(val) {
+            if (!formatted && _.isObject(val)) val = val.valueOf();
+            val = String(val);
+            if (self.csv.quoteValues && nonAlphaNumRE.test(val)) {
+              val = '"' + val.replace(allDoubleQuoteRE, '""') + '"';
+            }
+            return val;
+          }
+
+          csv.push(_.map(columns, function (col) {
+              return escape(col);
+          }).join(","));
+
+          _.forEach(rows, function (row) {
+            csv.push(_.map(columns, function (col) {
+              return escape(row._source[col]);
+            }).join(","));
+          });
+          return csv.join("\r\n") + "\r\n";
+
+        };
+
+
         var notify = new Notifier();
         $scope.limit = 50;
         $scope.persist = {

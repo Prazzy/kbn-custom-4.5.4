@@ -20,7 +20,7 @@ define(function (require) {
       },
       template: require('ui/partials/saved_object_finder.html'),
       controllerAs: 'finder',
-      controller: function ($scope, $element, $timeout) {
+      controller: function ($scope, $element, $timeout, Private) {
         var self = this;
 
         // The number of items to show in the list
@@ -236,11 +236,31 @@ define(function (require) {
           prevSearch = filter;
           self.service.find(filter)
           .then(function (hits) {
+            var queryFilter = Private(require('ui/filter_bar/query_filter'));
+            var filters = queryFilter.getGlobalFilters();
+            var operator = ['ALL'];
+            if (!_.isUndefined(filters) && filters.length) var filter_operator = filters[0].meta.value;
+            var appTitle = $scope.$root.chrome.getAppTitle();
+            var appTitle_lst = appTitle.split('_');
+            var app = appTitle_lst[0];
+            operator.push(filter_operator);
+
             // ensure that we don't display old results
             // as we can't really cancel requests
             if (currentFilter === filter) {
-              self.hitCount = hits.total;
-              self.hits = _.sortBy(hits.hits, 'title');
+              if (app == 'Kibana') {
+                self.hitCount = hits.total;
+                self.hits = _.sortBy(hits.hits, 'title');
+              } else {
+                self.hits = [];
+                hits.hits.forEach(function (row) {
+                  var options = JSON.parse(row.optionsJSON);
+                  if (_.contains(operator, options.operator) && options.app == app && !options.order) {
+                    self.hits.push(row)
+                  }
+                });
+                self.hitCount = self.hits.length;
+              }
             }
           });
         }

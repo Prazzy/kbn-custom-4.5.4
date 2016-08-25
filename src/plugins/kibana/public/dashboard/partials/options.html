@@ -6,5 +6,29 @@
         Use dark theme
       </label>
     </div>
+    <div>
+      <label>Operator(s):
+      <input
+        ng-model="opts.ui.operator"
+        placeholder="ALL"
+        type="text"> (Use comma separated for mulitple operators)
+      </label>
+    </div>
+    <div>
+      <label>App:
+      <input
+        ng-model="opts.ui.app"
+        placeholder="GCS4"
+        type="text">
+      </label>
+    </div>
+    <div>
+      <label>Order:
+      <input
+        ng-model="opts.ui.order"
+        placeholder="0"
+        type="text"> (0 => No order)
+      </label>
+    </div>
   </p>
 </form>
