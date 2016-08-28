@@ -122,7 +122,7 @@ define(function (require) {
             Promise.resolve(filters).then(function (filters) {
               extractTimeFilter(filters)
               .then(function (timeFilter) {
-                if (timeFilter) changeTimeFilter(timeFilter);base.lebase
+                if (timeFilter) changeTimeFilter(timeFilter);
               });
               return filters;
             })
