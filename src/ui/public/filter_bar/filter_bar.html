@@ -3,7 +3,7 @@
   </form>
 </div>
 
-<div class="bar" ng-show="filters.length">
+<div class="bar">
   <span ng-repeat="filter in filters">
   <div class="filter" ng-class="{ negate: filter.meta.negate, disabled: filter.meta.disabled }" ng-if="!filter.meta.hide">
     <div class="filter-description">
