@@ -39,7 +39,7 @@ define(function (require) {
           var searchSource = new SearchSource();
           searchSource.set('filter', $scope.searchSource.getOwn('filter')); 
           searchSource.set('query', $scope.searchSource.getOwn('query'));
-          searchSource.size(10000);
+          searchSource.size(50000);
           searchSource.index($scope.searchSource.get('index'));
           searchSource.onResults().then(function onResults(resp) {
 
