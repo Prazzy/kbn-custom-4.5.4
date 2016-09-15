@@ -78,16 +78,18 @@ define(function (require) {
 
     Timefilter.prototype.get = function (indexPattern) {
       var filter;
-      var timefield = indexPattern.timeFieldName && _.find(indexPattern.fields, {name: indexPattern.timeFieldName});
+      if (!_.isUndefined(indexPattern)) {
+        var timefield = indexPattern.timeFieldName && _.find(indexPattern.fields, {name: indexPattern.timeFieldName});
 
-      if (timefield) {
-        var bounds = this.getBounds();
-        filter = {range : {}};
-        filter.range[timefield.name] = {
-          gte: bounds.min.valueOf(),
-          lte: bounds.max.valueOf(),
-          format: 'epoch_millis'
-        };
+        if (timefield) {
+          var bounds = this.getBounds();
+          filter = {range: {}};
+          filter.range[timefield.name] = {
+            gte: bounds.min.valueOf(),
+            lte: bounds.max.valueOf(),
+            format: 'epoch_millis'
+          };
+        }
       }
 
       return filter;
