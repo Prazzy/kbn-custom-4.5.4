@@ -1,5 +1,5 @@
 define(function (require) {
-  return function MapFactory(Private, tilemap, $sanitize) {
+  return function MapFactory(Private) {
     var _ = require('lodash');
     var $ = require('jquery');
     var L = require('leaflet');
@@ -13,12 +13,13 @@ define(function (require) {
     var defaultMapCenter = [15, 5];
     var defaultMarkerType = 'Scaled Circle Markers';
 
-    var tilemapOptions = tilemap.options;
-    var attribution = $sanitize(marked(tilemapOptions.attribution));
-
     var mapTiles = {
-      url: tilemap.url,
-      options: _.assign({}, tilemapOptions, { attribution })
+      url: 'https://tiles.elastic.co/v1/default/{z}/{x}/{y}.png?my_app_name=kibana&my_app_version=4.5.4&elastic_tile_service_tos=agree',
+      options: {
+        attribution:'© [Elastic Tile Service](https://www.elastic.co/elastic-tile-service)',
+        maxZoom:10,
+        minZoom:1
+      }
     };
 
     var markerTypes = {
@@ -50,8 +51,8 @@ define(function (require) {
       this._attr = params.attr || {};
 
       var mapOptions = {
-        minZoom: tilemapOptions.minZoom,
-        maxZoom: tilemapOptions.maxZoom,
+        minZoom: mapTiles.options.minZoom,
+        maxZoom: mapTiles.options.maxZoom,
         noWrap: true,
         maxBounds: L.latLngBounds([-90, -220], [90, 220]),
         scrollWheelZoom: false,
