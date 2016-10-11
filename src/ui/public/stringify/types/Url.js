@@ -58,19 +58,20 @@ define(function (require) {
       { id: 'img', name: 'Image' }
     ];
 
-    Url.prototype._formatUrl = function (value) {
+    Url.prototype._formatUrl = function (value, hit) {
       var template = this.param('urlTemplate');
       if (!template) return value;
 
       return this._compileTemplate(template)({
         value: encodeURIComponent(value),
-        rawValue: value
+        rawValue: value,
+        hit: hit
       });
     };
 
-    Url.prototype._formatLabel = function (value, url) {
+    Url.prototype._formatLabel = function (value, url, hit) {
       var template = this.param('labelTemplate');
-      if (url == null) url = this._formatUrl(value);
+      if (url == null) url = this._formatUrl(value, hit);
       if (!template) return url;
 
       return this._compileTemplate(template)({
@@ -85,8 +86,8 @@ define(function (require) {
       },
 
       html: function (rawValue, field, hit) {
-        var url = _.escape(this._formatUrl(rawValue));
-        var label = _.escape(this._formatLabel(rawValue, url));
+        var url = _.escape(this._formatUrl(rawValue, hit));
+        var label = _.escape(this._formatLabel(rawValue, url, hit));
 
         switch (this.param('type')) {
           case 'img':
@@ -116,7 +117,11 @@ define(function (require) {
             if (locals.hasOwnProperty(parts[i])) {
               var local = locals[parts[i]];
               output += local == null ? '' : local;
+            } else {
+              var local = locals.hit['_source'][parts[i]];
+              output += local == null ? '' : local;
             }
+
           } else {
             output += parts[i];
           }
