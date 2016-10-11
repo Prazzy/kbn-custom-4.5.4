@@ -77,3 +77,11 @@
 
 # Set this to true to log all events, including system usage information and all requests.
 # logging.verbose: false
+#
+#
+#
+#
+optimize:
+  sourceMaps: '#cheap-source-map' # options -> http://webpack.github.io/docs/configuration.html#devtool
+  unsafeCache: true
+  lazyPrebuild: false
