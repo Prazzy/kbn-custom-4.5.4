@@ -65,6 +65,9 @@ define(function (require) {
         if (dash.timeRestore && dash.timeTo && dash.timeFrom && !getAppState.previouslyStored()) {
           timefilter.time.to = dash.timeTo;
           timefilter.time.from = dash.timeFrom;
+          if (dash.refreshInterval) {
+           timefilter.refreshInterval = dash.refreshInterval;
+          }
         }
 
         $scope.$on('$destroy', dash.destroy);
@@ -183,10 +186,12 @@ define(function (require) {
           $state.title = dash.id = dash.title;
           $state.save();
 
+          const timeRestoreObj = _.pick(timefilter.refreshInterval, ['display', 'pause', 'section', 'value']);
           dash.panelsJSON = angular.toJson($state.panels);
           dash.uiStateJSON = angular.toJson($uiState.getChanges());
           dash.timeFrom = dash.timeRestore ? timefilter.time.from : undefined;
           dash.timeTo = dash.timeRestore ? timefilter.time.to : undefined;
+          dash.refreshInterval = dash.timeRestore ? timeRestoreObj : undefined;
           dash.optionsJSON = angular.toJson($state.options);
 
           dash.save()

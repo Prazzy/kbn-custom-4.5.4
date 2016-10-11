@@ -33,6 +33,7 @@ define(function (require) {
           timeRestore: false,
           timeTo: undefined,
           timeFrom: undefined,
+          refreshInterval: undefined
         },
 
         // if an indexPattern was saved with the searchsource of a SavedDashboard
@@ -56,6 +57,15 @@ define(function (require) {
       timeRestore: 'boolean',
       timeTo: 'string',
       timeFrom: 'string',
+      refreshInterval: {
+      type: 'object',
+      properties: {
+        display: {type: 'string'},
+        pause: { type: 'boolean'},
+        section: { type: 'integer'},
+        value: { type: 'integer'}
+        }
+      }
     };
 
     SavedDashboard.searchsource = true;
