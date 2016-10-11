@@ -118,7 +118,7 @@ define(function (require) {
       $scope.state = $state;
       $scope.uiState = $state.makeStateful('uiState');
 
-      $scope.conf = _.pick($scope, 'doSave', 'savedVis', 'shareData');
+      $scope.conf = _.pick($scope, 'doSave', 'doSaveAs', 'savedVis', 'shareData');
       $scope.configTemplate = configTemplate;
 
       editableVis.listeners.click = vis.listeners.click = filterBarClickHandler($state);
@@ -219,6 +219,24 @@ define(function (require) {
     };
 
     $scope.doSave = function () {
+      //savedVis.id = savedVis.title;
+      savedVis.visState = $state.vis;
+      savedVis.uiStateJSON = angular.toJson($scope.uiState.getChanges());
+
+      savedVis.save()
+      .then(function (id) {
+        configTemplate.close('save');
+
+        if (id) {
+          notify.info('Saved Visualization "' + savedVis.title + '"');
+          if (savedVis.id === $route.current.params.id) return;
+          kbnUrl.change('/visualize/edit/{{id}}', {id: savedVis.id});
+        }
+      }, notify.fatal);
+    };
+
+    $scope.doSaveAs = function () {
+      savedVis.title = savedVis.new_title;
       savedVis.id = savedVis.title;
       savedVis.visState = $state.vis;
       savedVis.uiStateJSON = angular.toJson($scope.uiState.getChanges());

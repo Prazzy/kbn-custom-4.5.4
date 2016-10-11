@@ -1,7 +1,15 @@
-<form role="form" ng-submit="conf.doSave()">
+<form role="form" ng-submit="conf.doSave()" ng-if="conf.savedVis.id">
   <div class="form-group">
-    <label for="visTitle">Title</label>
+    <label for="visTitle">Modify Title</label>
     <input class="form-control" input-focus="select" type="text" name="visTitle" ng-model="conf.savedVis.title" required>
   </div>
-  <button type="submit" class="btn btn-primary">Save</button>
+  <button type="submit" class="btn btn-primary">Save Visualization</button>
+</form>
+<br>
+<form role="form" ng-submit="conf.doSaveAs()">
+  <div class="form-group">
+    <label for="visTitle">New Visualization</label>
+    <input class="form-control" input-focus="select" type="text" name="visTitle" ng-model="conf.savedVis.new_title" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Save As New Visualization</button>
 </form>
