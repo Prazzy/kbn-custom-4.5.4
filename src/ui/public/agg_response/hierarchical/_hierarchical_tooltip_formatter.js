@@ -18,6 +18,8 @@ define(function (require) {
 
         var metricCol = $tooltipScope.metricCol = _.find(columns, { categoryName: 'metric' });
 
+        if (metricCol.aggConfig.params.customLabel != '') metricCol.label = metricCol.aggConfig.params.customLabel;
+
         // Map those values to what the tooltipSource.rows format.
         _.forEachRight($tooltipScope.rows, function (row, i, rows) {
           row.spacer = $sce.trustAsHtml(_.repeat('&nbsp;', row.depth));
