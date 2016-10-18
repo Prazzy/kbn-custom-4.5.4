@@ -118,8 +118,10 @@ define(function (require) {
               var local = locals[parts[i]];
               output += local == null ? '' : local;
             } else {
-              var local = locals.hit['_source'][parts[i]];
-              output += local == null ? '' : local;
+              if (!_.isUndefined(locals.hit)) {
+                var local = locals.hit['_source'][parts[i]];
+                output += local == null ? '' : local;
+              }
             }
 
           } else {
