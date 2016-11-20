@@ -48,7 +48,7 @@ app.directive('shareObjectUrl', function (Private, Notifier) {
         if ($scope.shareAsEmbed) {
           $scope.formattedUrl = `<iframe src="${$scope.url}" height="600" width="800"></iframe>`;
         } else {
-          $scope.formattedUrl = $scope.url;
+          $scope.formattedUrl = $scope.url.replace(/options:\([^\)]*\),/g, '');
         }
 
         $scope.shortGenerated = false;
