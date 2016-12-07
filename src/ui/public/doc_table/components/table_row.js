@@ -11,7 +11,7 @@ define(function (require) {
 
 
   // guesstimate at the minimum number of chars wide cells in the table should be
-  var MIN_LINE_LENGTH = 20;
+  var MIN_LINE_LENGTH = 10000;
 
   /**
    * kbnTableRow directive
@@ -96,18 +96,11 @@ define(function (require) {
             openRowHtml
           ];
 
-          if (indexPattern.timeFieldName) {
-            newHtmls.push(cellTemplate({
-              timefield: true,
-              formatted: _displayField(row, indexPattern.timeFieldName)
-            }));
-          }          
-
           $scope.columns.forEach(function (column) {
             newHtmls.push(cellTemplate({
               timefield: false,
               sourcefield: (column === '_source'),
-              formatted: _displayField(row, column, false)
+              formatted: _displayField(row, column, true)
             }));
           });
 
