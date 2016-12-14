@@ -1,5 +1,6 @@
 <kbn-notifications list="notifList"></kbn-notifications>
 <div class="content" chrome-context >
+  <div id="tabs-sticky">
   <nav
     ng-style="::{ background: chrome.getNavBackground() }"
     ng-class="{ show: chrome.getVisible() }"
@@ -69,6 +70,7 @@
     config-object="timefilter"
     config-close="pickerTemplate.close">
   </config>
+  </div>
 
   <div class="application" ng-class="'tab-dashboard' + ' ' + chrome.getApplicationClasses()" ng-view></div>
 </div>
