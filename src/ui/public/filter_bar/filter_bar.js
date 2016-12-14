@@ -17,6 +17,7 @@ define(function (require) {
     var queryFilter = Private(require('ui/filter_bar/query_filter'));
     var filterEditor = require('ui/filter_editor/filter_editor');
     var privateFilterFieldRegex = /(^\$|meta)/;
+    require('ui/filters/display_filter');
 
     return {
       restrict: 'E',
@@ -34,7 +35,9 @@ define(function (require) {
           'invertAll',
           'removeFilter',
           'removeAll',
-          'updateFilter'
+          'updateFilter',
+          'addNewFilter',
+          'displayFilter'
         ].forEach(function (method) {
           $scope[method] = queryFilter[method];
         });

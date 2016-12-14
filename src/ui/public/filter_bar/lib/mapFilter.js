@@ -29,6 +29,7 @@ define(function (require) {
       Private(require('./mapQueryString')),
       Private(require('./mapGeoBoundingBox')),
       Private(require('./mapScript')),
+      Private(require('./mapBool')),
       Private(require('./mapDefault'))
     ];
 
