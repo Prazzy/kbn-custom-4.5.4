@@ -112,12 +112,13 @@ define(function (require) {
       return angular.copy(mergedFilter, filter.source);
     };
 
-    queryFilter.addNewFilter = function() {
+    queryFilter.addNewFilter = function () {
       var newFilters = [];
 
       var negate = false;
       var disabled = true;
-      filter = { meta: { disabled:disabled, negate: negate, index: this.$parent.dash.searchSource.get('index').id }, query: { match: {} } };
+      var filter = { meta: { disabled:disabled, negate: negate,
+                             index: this.$parent.dash.searchSource.get('index').id }, query: { match: {} } };
       ++counter;
       var key = 'Enter Column Name' + counter;
       var value = 'Enter Column Value' + counter;

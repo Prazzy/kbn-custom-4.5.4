@@ -122,15 +122,15 @@ define(function (require) {
 
           // Just add single filters to the state.
           //if (filters.length === 1) {
-            Promise.resolve(filters).then(function (filters) {
-              extractTimeFilter(filters)
-              .then(function (timeFilter) {
-                if (timeFilter) changeTimeFilter(timeFilter);
-              });
-              return filters;
-            })
-            .then(filterOutTimeBasedFilter)
-            .then($scope.addFilters);
+          Promise.resolve(filters).then(function (filters) {
+            extractTimeFilter(filters)
+            .then(function (timeFilter) {
+              if (timeFilter) changeTimeFilter(timeFilter);
+            });
+            return filters;
+          })
+          .then(filterOutTimeBasedFilter)
+          .then($scope.addFilters);
           //}
         });
 

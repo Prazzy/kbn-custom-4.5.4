@@ -88,28 +88,28 @@ module.directive('filterEditor', function ($route, courier) {
        */
 
       $scope.changeClause = function (fromClause, toClause, expression, index) {
-        if (fromClause == 'must') var from_value = expression.bool[fromClause].term;
-        if (fromClause == 'prefix') var from_value = expression.query.prefix;
-        if (fromClause == 'wildcard') var from_value = expression.query.wildcard;
-
-        if (toClause == 'prefix') {
-          var prefix_expression = { query: { prefix: {}}};
-          var key = Object.keys(from_value)[0];
-          from_value[key] = from_value[key].replace(/\*/g, '');
-          prefix_expression.query.prefix = from_value;
-          $scope.filter.bool.should[index] = angular.copy(prefix_expression);
-        } else if (toClause == 'wildcard') {
-          var wildcard_expression = { query: { wildcard: {}}};
-          var key = Object.keys(from_value)[0];
-          from_value[key] = '*' + from_value[key] + '*';
-          wildcard_expression.query.wildcard = from_value;
-          $scope.filter.bool.should[index] = angular.copy(wildcard_expression);
+        if (fromClause === 'must') var fromValue = expression.bool[fromClause].term;
+        if (fromClause === 'prefix') var fromValue = expression.query.prefix;
+        if (fromClause === 'wildcard') var fromValue = expression.query.wildcard;
+        var key;
+        if (toClause === 'prefix') {
+          var prefixExpression = { query: { prefix: {}}};
+          key = Object.keys(fromValue)[0];
+          fromValue[key] = fromValue[key].replace(/\*/g, '');
+          prefixExpression.query.prefix = fromValue;
+          $scope.filter.bool.should[index] = angular.copy(prefixExpression);
+        } else if (toClause === 'wildcard') {
+          var wildcardExpression = { query: { wildcard: {}}};
+          key = Object.keys(fromValue)[0];
+          fromValue[key] = '*' + fromValue[key] + '*';
+          wildcardExpression.query.wildcard = fromValue;
+          $scope.filter.bool.should[index] = angular.copy(wildcardExpression);
         } else {
-          var bool_expression = { bool: {} };
-          var key = Object.keys(from_value)[0];
-          from_value[key] = from_value[key].replace(/\*/g, '');
-          bool_expression.bool[toClause] = { term: from_value};
-          $scope.filter.bool.should[index] = angular.copy(bool_expression);
+          var boolExpression = { bool: {} };
+          key = Object.keys(fromValue)[0];
+          fromValue[key] = fromValue[key].replace(/\*/g, '');
+          boolExpression.bool[toClause] = { term: fromValue};
+          $scope.filter.bool.should[index] = angular.copy(boolExpression);
         }
       };
 
@@ -121,20 +121,21 @@ module.directive('filterEditor', function ($route, courier) {
        * @param {object} expression
        */
 
-      $scope.changeValue = function (new_value, expression, index) {
+      $scope.changeValue = function (newValue, expression, index) {
+        var key;
         if (expression.bool) {
-          var key = Object.keys(expression.bool.must.term)[0];
-          expression.bool.must.term[key] = new_value;
+          key = Object.keys(expression.bool.must.term)[0];
+          expression.bool.must.term[key] = newValue;
         } else if (expression.query) {
           if (expression.query.prefix) {
-            var key = Object.keys(expression.query.prefix)[0];
-            expression.query.prefix[key] = new_value;
+            key = Object.keys(expression.query.prefix)[0];
+            expression.query.prefix[key] = newValue;
           } else if (expression.query.wildcard) {
-            var key = Object.keys(expression.query.wildcard)[0];
-            expression.query.wildcard[key] = new_value;
+            key = Object.keys(expression.query.wildcard)[0];
+            expression.query.wildcard[key] = newValue;
           }
-        } 
-      };      
+        }
+      };
 
       /**
        * Changes the field for an expression
@@ -143,28 +144,29 @@ module.directive('filterEditor', function ($route, courier) {
        * @param {object} expression
        */
 
-      $scope.changeField = function (new_field, expression, expressions) {
-        _.map(expressions, function(filter) {
+      $scope.changeField = function (newField, expression, expressions) {
+        var key;
+        var value;
+        _.map(expressions, function (filter) {
           if (filter.bool) {
-            var key = Object.keys(filter.bool.must.term)[0];
-            var value = filter.bool.must.term[key];
-            filter.bool.must.term[new_field] = value;  
-            delete filter.bool.must.term[key];  
+            key = Object.keys(filter.bool.must.term)[0];
+            value = filter.bool.must.term[key];
+            filter.bool.must.term[newField] = value;
+            delete filter.bool.must.term[key];
           } else if (filter.query) {
             if (filter.query.prefix) {
-              var key = Object.keys(filter.query.prefix)[0];
-              var value = filter.query.prefix[key];
-              filter.query.prefix[new_field] = value;  
-              delete filter.query.prefix[key];  
+              key = Object.keys(filter.query.prefix)[0];
+              value = filter.query.prefix[key];
+              filter.query.prefix[newField] = value;
+              delete filter.query.prefix[key];
             } else if (filter.query.wildcard) {
-              var key = Object.keys(filter.query.wildcard)[0];
-              var value = filter.query.wildcard[key];
-              filter.query.wildcard[new_field] = value;  
-              delete filter.query.wildcard[key];  
+              key = Object.keys(filter.query.wildcard)[0];
+              value = filter.query.wildcard[key];
+              filter.query.wildcard[newField] = value;
+              delete filter.query.wildcard[key];
             }
-          } 
+          }
         });
-        
 
         // let type = Object.keys(expression)[0];
         // let prevField = Object.keys(expression[type])[0];
@@ -204,29 +206,29 @@ module.directive('filterEditor', function ($route, courier) {
       };
 
       function ensureBoolFilters() {
-        if ($scope.filter.query) {  
+        if ($scope.filter.query) {
           if ($scope.filter.query.match) {
-            var result = _.map($scope.filter.query.match, function(val, key) {
+            var result = _.map($scope.filter.query.match, function (val, key) {
               return { key: key, val: val };
-            });  
+            });
 
-            var sub_query = {
-                            bool: {
-                              must: {
-                                term: {
-                                }
-                              } 
-                            }
-                          };
-            sub_query.bool.must.term[result[0].key] = result[0].val.query;         
+            var subQuery = {
+              bool: {
+                must: {
+                  term: {
+                  }
+                }
+              }
+            };
+            subQuery.bool.must.term[result[0].key] = result[0].val.query;
             $scope.filter = {
               bool: {
                 should: [
-                   sub_query
+                  subQuery
                 ]
               }
-            };    
-          } else {    
+            };
+          } else {
             $scope.filter = {
               bool: {
                 should: [
