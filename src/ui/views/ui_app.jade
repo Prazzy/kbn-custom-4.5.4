@@ -31,7 +31,7 @@ block content
       var hideLoadingMessage = /#.*[?&]embed(&|$)/.test(window.location.href);
       if (hideLoadingMessage) {
         var loading = document.querySelector('.ui-app-loading h1');
-        loading.removeChild(loading.lastChild);
+        if (loading) loading.removeChild(loading.lastChild);
       }
 
       var buildNum = #{kibanaPayload.buildNum};

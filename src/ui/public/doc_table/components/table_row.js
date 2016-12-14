@@ -11,7 +11,7 @@ define(function (require) {
 
 
   // guesstimate at the minimum number of chars wide cells in the table should be
-  var MIN_LINE_LENGTH = 20;
+  var MIN_LINE_LENGTH = 10000;
 
   /**
    * kbnTableRow directive
@@ -100,7 +100,7 @@ define(function (require) {
             newHtmls.push(cellTemplate({
               timefield: false,
               sourcefield: (column === '_source'),
-              formatted: _displayField(row, column, false)
+              formatted: _displayField(row, column, true)
             }));
           });
 

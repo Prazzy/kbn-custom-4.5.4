@@ -1,6 +1,6 @@
 <div class="doc-viewer">
   <ul class="nav nav-tabs">
-    <li ng-class="{active: mode == 'table'}"><a ng-click="mode='table'">Table</a></li>
+    <li ng-class="{active: mode == 'table'}"><a ng-click="mode='table'">Columns</a></li>
   </ul>
 
   <div class="doc-viewer-content">
@@ -27,12 +27,12 @@
               <i class="fa fa-search-plus text-muted"></i>
               <i class="fa fa-search-minus text-muted"></i>
             </span>
-            <span ng-if="columns">
+            <!-- <span ng-if="columns">
               <i ng-click="toggleColumn(field)"
                 tooltip="Toggle column in table"
                 tooltip-append-to-body="1"
                 class="fa fa-columns"></i>
-            </span>
+            </span> -->
           </td>
 
           <td>

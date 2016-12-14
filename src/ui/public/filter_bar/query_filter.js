@@ -11,6 +11,7 @@ define(function (require) {
     var angular = require('angular');
 
     var queryFilter = new EventEmitter();
+    var counter = 0;
 
     queryFilter.getFilters = function () {
       var compareOptions = { disabled: true, negate: true };
@@ -109,6 +110,21 @@ define(function (require) {
       }
 
       return angular.copy(mergedFilter, filter.source);
+    };
+
+    queryFilter.addNewFilter = function () {
+      var newFilters = [];
+
+      var negate = false;
+      var disabled = true;
+      var filter = { meta: { disabled:disabled, negate: negate,
+                             index: this.$parent.dash.searchSource.get('index').id }, query: { match: {} } };
+      ++counter;
+      var key = 'Enter Column Name' + counter;
+      var value = 'Enter Column Value' + counter;
+      filter.query.match[key] = { query: value, type: 'phrase' };
+      newFilters.push(filter);
+      queryFilter.addFilters(newFilters);
     };
 
     /**

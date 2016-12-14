@@ -31,7 +31,9 @@ define(function (require) {
           $scope.flattened = $scope.indexPattern.flattenHit($scope.hit);
           $scope.hitJson = angular.toJson($scope.hit, true);
           $scope.formatted = $scope.indexPattern.formatHit($scope.hit);
-          $scope.fields = _.keys($scope.flattened).sort();
+          // show only fields of saved search in doc viewer
+          //$scope.fields = _.keys($scope.flattened).sort();
+          $scope.fields = $scope.columns;
 
           $scope.toggleColumn = function (fieldName) {
             _.toggleInOut($scope.columns, fieldName);

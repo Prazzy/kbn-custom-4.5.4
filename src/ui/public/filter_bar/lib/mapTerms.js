@@ -12,7 +12,7 @@ define(function (require) {
           key = _.keys(filter.query.match)[0];
           field = indexPattern.fields.byName[key];
           value = filter.query.match[key].query;
-          value = field.format.convert(value);
+          if (field) value = field.format.convert(value);
           return { key: key, value: value };
         });
       }

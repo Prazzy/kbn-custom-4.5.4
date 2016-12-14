@@ -1,4 +1,4 @@
-<div
+<!--div
   class="fe-expression fe-expression-{{::clause}}">
 
     <span ng-repeat="(filterType, fields) in filter.query">
@@ -22,4 +22,88 @@
         </div>
       </div>
     </span>
+</div-->
+<h5>Note: Below filters will be an "OR" filter.</h5>
+<div
+  ng-if="filter.bool"
+  ng-repeat="(clause, expressions) in filter.bool"
+  class="fe-expression fe-expression-{{::clause}}">
+
+  <span ng-repeat="expression in expressions" ng-init="expression_index = $index">
+  <span ng-if="expression.query" ng-repeat="(subclause, subexpression) in expression.query">
+    <div ng-repeat="(fieldName, value) in subexpression" class="row">
+        <div class="col-xs-11">
+          <div class="fe-inputs">
+            <select
+              ng-model="fieldName"
+              ng-change="changeField(fieldName, subexpression, expressions)"
+              ng-options="name for name in indexFieldNames"
+              class="fe-field form-control">
+            </select>
+
+            <select
+              ng-model="subclause"
+              ng-change="changeClause('{{::subclause}}', subclause, expression, expression_index)"
+              ng-options="name for (name, label) in clauses"
+              class="fe-clause form-control">
+            </select>
+
+            <div class="fe-query-container">
+              <input
+                ng-model="value"
+                ng-change="changeValue(value, expression, expression_index)"
+                class="fe-query form-control" />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xs-1 fe-actions">
+          <i ng-click="add(clause, expression)" class="fa fa-fw fa-copy"></i>
+          <i ng-click="remove(clause, $parent.$parent.$index)" class="fa fa-fw fa-trash"></i>
+        </div>
+      </div>
+    </span>
+  
+  <span ng-if="expression.bool" ng-repeat="(subclause, subexpression) in expression.bool">
+    <div ng-repeat="(fieldName, value) in subexpression.term" class="row">
+        <div class="col-xs-11">
+          <div class="fe-inputs">
+            <select
+              ng-model="fieldName"
+              ng-change="changeField(fieldName, subexpression, expressions)"
+              ng-options="name for name in indexFieldNames"
+              class="fe-field form-control">
+            </select>
+
+            <select
+              ng-model="subclause"
+              ng-change="changeClause('{{::subclause}}', subclause, expression, expression_index)"
+              ng-options="name for (name, label) in clauses"
+              class="fe-clause form-control">
+            </select>
+
+            <div class="fe-query-container">
+              <input
+                ng-model="value"
+                ng-change="changeValue(value, expression, expression_index)"
+                class="fe-query form-control" />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xs-1 fe-actions">
+          <i ng-click="add(clause, expression)" class="fa fa-fw fa-copy"></i>
+          <i ng-click="remove(clause, $parent.$parent.$index)" class="fa fa-fw fa-trash"></i>
+        </div>
+      </div>
+    </span>
+  </span>
 </div>
+
+<!-- <div class="row">
+  <div class="col-xs-1 col-xs-offset-11">
+    <button class="btn btn-success" type='button'>
+      <i ng-click="add()" class="fa fa-fw fa-plus"></i>
+    </botton>
+  </div>
+</div> -->
