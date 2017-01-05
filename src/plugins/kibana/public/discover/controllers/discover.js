@@ -270,7 +270,33 @@ define(function (require) {
     $scope.opts.saveDataSource = function () {
       return $scope.updateDataSource()
       .then(function () {
-        savedSearch.id = savedSearch.title;
+        //savedSearch.id = savedSearch.title;
+        savedSearch.columns = $scope.state.columns;
+        savedSearch.sort = $scope.state.sort;
+
+        return savedSearch.save()
+        .then(function (id) {
+          $scope.configTemplate.close('save');
+
+          if (id) {
+            notify.info('Saved Data Source "' + savedSearch.title + '"');
+            if (savedSearch.id !== $route.current.params.id) {
+              kbnUrl.change('/discover/{{id}}', { id: savedSearch.id });
+            } else {
+              // Update defaults so that "reload saved query" functions correctly
+              $state.setDefaults(getStateDefaults());
+            }
+          }
+        });
+      })
+      .catch(notify.error);
+    };
+
+    $scope.opts.saveDataSourceAs = function () {
+      return $scope.updateDataSource()
+      .then(function () {
+        savedSearch.title = savedSearch.new_title;
+        savedSearch.id = savedSearch.new_title;
         savedSearch.columns = $scope.state.columns;
         savedSearch.sort = $scope.state.sort;
 
