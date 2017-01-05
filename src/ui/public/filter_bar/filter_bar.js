@@ -44,6 +44,7 @@ define(function (require) {
 
         $scope.state = getAppState();
         $scope.editor = 'visual';
+        $scope.showAddNewFilter = true;
 
         $scope.aceLoaded = function (editor) {
           editor.$blockScrolling = Infinity;
@@ -64,6 +65,7 @@ define(function (require) {
         };
 
         $scope.startEditingFilter = function (source) {
+          $scope.showAddNewFilter = false;
           return $scope.editingFilter = {
             source: source,
             type: _.findKey(source, function (val, key) {
@@ -76,6 +78,7 @@ define(function (require) {
 
         $scope.stopEditingFilter = function () {
           $scope.editingFilter = null;
+          $scope.showAddNewFilter = true;
         };
 
         $scope.editDone = function () {
