@@ -206,9 +206,10 @@ module.directive('filterEditor', function ($route, courier) {
       };
 
       function ensureBoolFilters() {
-        if ($scope.filter.query) {
-          if ($scope.filter.query.match) {
-            var result = _.map($scope.filter.query.match, function (val, key) {
+        let query = $scope.filter.query;
+        if (query) {
+          if (query.match) {
+            var result = _.map(query.match, function (val, key) {
               return { key: key, val: val };
             });
 
@@ -232,7 +233,9 @@ module.directive('filterEditor', function ($route, courier) {
             $scope.filter = {
               bool: {
                 should: [
-                  $scope.filter.query
+                  {
+                    query: query
+                  }
                 ]
               }
             };
