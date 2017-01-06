@@ -14,6 +14,10 @@ define(function (require) {
             action = '<%= value %>*';
           } else if (fl.query.wildcard) {
             field = fl.query.wildcard;
+          } else if (fl.query.regexp) {
+            field = fl.query.regexp;
+          } else {
+            field = fl.query;
           }
         } else if (fl.bool) {
           field = fl.bool.must.term;
