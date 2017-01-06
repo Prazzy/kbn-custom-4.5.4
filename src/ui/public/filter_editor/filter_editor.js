@@ -36,7 +36,7 @@ module.directive('filterEditor', function ($route, courier) {
       });
 
       //$scope.clauses = { Equals: 'must', 'Does Not Equal': 'must_not'};
-      $scope.clauses = { Equals: 'must', 'Begins With': 'prefix', 'Contains': 'wildcard'};
+      $scope.clauses = { Equals: 'must', 'Begins With': 'prefix', Contains: 'wildcard', Regex: 'regexp'};
       //$scope.types = { match: 'keyword', term: 'exact' };
       $scope.filterType = 'term';
 
@@ -91,6 +91,7 @@ module.directive('filterEditor', function ($route, courier) {
         if (fromClause === 'must') var fromValue = expression.bool[fromClause].term;
         if (fromClause === 'prefix') var fromValue = expression.query.prefix;
         if (fromClause === 'wildcard') var fromValue = expression.query.wildcard;
+        if (fromClause === 'regexp') var fromValue = expression.query.regexp;
         var key;
         if (toClause === 'prefix') {
           var prefixExpression = { query: { prefix: {}}};
@@ -104,6 +105,12 @@ module.directive('filterEditor', function ($route, courier) {
           fromValue[key] = '*' + fromValue[key] + '*';
           wildcardExpression.query.wildcard = fromValue;
           $scope.filter.bool.should[index] = angular.copy(wildcardExpression);
+        } else if (toClause === 'regexp') {
+          var regexpExpression = { query: { regexp: {}}};
+          key = Object.keys(fromValue)[0];
+          fromValue[key] = fromValue[key];
+          regexpExpression.query.regexp = fromValue;
+          $scope.filter.bool.should[index] = angular.copy(regexpExpression);
         } else {
           var boolExpression = { bool: {} };
           key = Object.keys(fromValue)[0];
@@ -133,6 +140,9 @@ module.directive('filterEditor', function ($route, courier) {
           } else if (expression.query.wildcard) {
             key = Object.keys(expression.query.wildcard)[0];
             expression.query.wildcard[key] = newValue;
+          } else if (expression.query.regexp) {
+            key = Object.keys(expression.query.regexp)[0];
+            expression.query.regexp[key] = newValue;
           }
         }
       };
@@ -164,6 +174,11 @@ module.directive('filterEditor', function ($route, courier) {
               value = filter.query.wildcard[key];
               filter.query.wildcard[newField] = value;
               delete filter.query.wildcard[key];
+            } else if (filter.query.regexp) {
+              key = Object.keys(filter.query.regexp)[0];
+              value = filter.query.regexp[key];
+              filter.query.regexp[newField] = value;
+              delete filter.query.regexp[key];
             }
           }
         });
