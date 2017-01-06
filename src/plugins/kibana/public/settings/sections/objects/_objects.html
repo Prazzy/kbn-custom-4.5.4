@@ -64,8 +64,8 @@
             </div>
 
             <div class="item-title">
-              <a ng-if="!item.savedSearchId" ng-click="edit(service, item)">{{ item.title }}</a>
-              <a ng-if="item.savedSearchId" ng-click="edit(service, item)">{{ item.title }} ({{ item.savedSearchId }})</a>
+              <a ng-if="!item.savedSearchId" ng-click="edit(service, item)">{{ item.title }} ({{ item.id }})</a>
+              <a ng-if="item.savedSearchId" ng-click="edit(service, item)">{{ item.title }} ({{ item.id }}, {{ item.savedSearchId }})</a>
             </div>
           </li>
           <li ng-if="!service.data.length" class="empty">No "{{service.title}}" found.</li>
