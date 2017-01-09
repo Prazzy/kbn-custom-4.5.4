@@ -54,6 +54,7 @@ define(function (require) {
     return {
       controller: function ($scope, $rootScope, $route, $routeParams, $location, Private, getAppState) {
 
+        const services = Private(require('ui/saved_objects/saved_object_registry')).byLoaderPropertiesName;
         const queryFilter = Private(require('ui/filter_bar/query_filter'));
 
         const notify = new Notifier({
@@ -182,6 +183,100 @@ define(function (require) {
           $scope.refresh();
         };
 
+        // PAC Feature: collect all index fields added to a dashboard
+        $scope.indexFieldNames = [];
+        $scope.indexPatterns = [];
+        $scope.searches = [];
+        $scope.getIndexFieldNames = function (indexPattern) {
+          courier.indexPatterns.get(indexPattern).then(function (index) {
+          let indexFields = index.fields.reduce(function (fields, field) {
+            if (field.filterable === true) {
+              fields[field.name] = field.type;
+            }
+            return fields;
+          }, {});
+          //let old_fields = $scope.indexFieldNames;
+          //$scope.indexFieldNames = _.merge(old_fields, Object.keys(indexFields).sort());
+          $scope.indexFieldNames.push(Object.keys(indexFields).sort());
+          });
+        };
+
+        $scope.parsePanelVis = function () {
+          let panels = _.merge($scope.state.panels, $state.panels);
+          let visualizations = services.visualizations;
+          // let ids = [];
+          // panels.forEach(function (panel) {
+          //   ids.push(panel)
+          // });
+
+          // visualizations.mget(ids)
+          // .then(function (hits) {
+          //   debugger;
+          //   hits.hits.forEach(function (hit) {
+          //     let doc = hit['_source'];
+          //     if (doc['savedSearchId']) $scope.searches.push(doc['savedSearchId']);
+          //     else $scope.indexPatterns.push(JSON.parse(doc['kibanaSavedObjectMeta']['searchSourceJSON']).index);
+          //   });
+          // });
+
+          panels.forEach(function (panel) {
+            visualizations.get(panel.id)
+              .then(function (hit) {
+                if (hit) {
+                  if (hit.savedSearchId) {
+                    $scope.getIndexFieldNamesBySearch(hit.savedSearchId);
+                  }
+                  else {
+                    let indexPat = JSON.parse(hit.kibanaSavedObjectMeta.searchSourceJSON).index;
+                    //if (!_.includes($scope.indexPatterns, indexPat))
+                    $scope.getIndexFieldNames(indexPat);
+                  }
+                }
+              });
+          });
+        };
+
+        $scope.getIndexFieldNamesBySearch = function (searchName) {
+          let searches = services.searches;
+          searches.get(searchName)
+          .then(function (hit) {
+            if (hit) {
+              let indexPat = JSON.parse(hit.kibanaSavedObjectMeta.searchSourceJSON).index;
+              //if (!_.includes($scope.indexPatterns, indexPat))
+              $scope.getIndexFieldNames(indexPat);
+            }
+          });
+
+        };
+
+        $scope.parsePanelSearches = function () {
+          let panels = _.merge($scope.state.panels, $state.panels);
+          let searches = services.searches;
+          panels.forEach(function (panel) {
+            searches.get(panel.id)
+            .then(function (hit) {
+              let indexPat = JSON.parse(hit.kibanaSavedObjectMeta.searchSourceJSON).index;
+              //if (!_.includes($scope.indexPatterns, indexPat))
+              $scope.getIndexFieldNames(indexPat);
+            });
+          });
+        };
+
+        $scope.getIndexPatterns = function () {
+          $scope.searches = _.uniq($scope.searches);
+          let searches = services.searches;
+          $scope.searches.forEach(function (search) {
+            searches.find(search)
+            .then(function (hits) {
+              if (hits.hits.length > 0) $scope.indexPatterns.push(JSON.parse(hits.hits[0].kibanaSavedObjectMeta.searchSourceJSON).index);
+            });
+          });
+        };
+
+        $scope.parsePanelVis();
+        $scope.parsePanelSearches();
+        // PAC Feature: collect all index fields added to a dashboard
+
         $scope.save = function () {
           $state.title = dash.id = dash.title;
           $state.save();
@@ -192,6 +287,11 @@ define(function (require) {
           dash.timeFrom = dash.timeRestore ? timefilter.time.from : undefined;
           dash.timeTo = dash.timeRestore ? timefilter.time.to : undefined;
           dash.refreshInterval = dash.timeRestore ? timeRestoreObj : undefined;
+          // PAC Feature: collect all index fields added to a dashboard
+          //if (_.find($state.panels, {type: 'search'})) $state.options['fields'] =
+          // angular.toJson(_.find($state.panels, {type: 'search'}).columns);
+          $state.options.fields = _.uniq(_.flatten($scope.indexFieldNames)).sort();
+          // PAC Feature: collect all index fields added to a dashboard
           dash.optionsJSON = angular.toJson($state.options);
 
           dash.save()
@@ -224,11 +324,13 @@ define(function (require) {
 
         // called by the saved-object-finder when a user clicks a vis
         $scope.addVis = function (hit) {
+          $scope.parsePanelVis(); // PAC Feature: collect all index fields added to a dashboard
           pendingVis++;
           $state.panels.push({ id: hit.id, type: 'visualization', panelIndex: getMaxPanelIndex() });
         };
 
         $scope.addSearch = function (hit) {
+          $scope.parsePanelSearches(); // PAC Feature: collect all index fields added to a dashboard
           pendingVis++;
           $state.panels.push({ id: hit.id, type: 'search', panelIndex: getMaxPanelIndex() });
         };
