@@ -18,22 +18,26 @@ module.directive('filterEditor', function ($route, courier) {
       filter: '=',
       indexPattern: '='
     },
-
     link: function ($scope) {
       $scope.indexFields = {};
       $scope.indexFieldNames = [];
+      // ugly code, needs to be refactored..
+      if (JSON.parse($scope.$parent.$parent.$parent.$parent.dash.optionsJSON).fields) {
+        $scope.indexFieldNames = JSON.parse($scope.$parent.$parent.$parent.$parent.dash.optionsJSON).fields;
+      }
 
-      courier.indexPatterns.get($scope.indexPattern).then(function (index) {
-        $scope.indexFields = index.fields.reduce(function (fields, field) {
-          if (field.filterable === true) {
-            fields[field.name] = field.type;
-          }
+      // commented below code as
+      // courier.indexPatterns.get($scope.indexPattern).then(function (index) {
+      //   $scope.indexFields = index.fields.reduce(function (fields, field) {
+      //     if (field.filterable === true) {
+      //       fields[field.name] = field.type;
+      //     }
 
-          return fields;
-        }, {});
+      //     return fields;
+      //   }, {});
 
-        $scope.indexFieldNames = Object.keys($scope.indexFields).sort();
-      });
+      //   $scope.indexFieldNames = Object.keys($scope.indexFields).sort();
+      // });
 
       //$scope.clauses = { Equals: 'must', 'Does Not Equal': 'must_not'};
       $scope.clauses = { Equals: 'must', 'Begins With': 'prefix', Contains: 'wildcard', Regex: 'regexp'};
