@@ -117,8 +117,10 @@ define(function (require) {
 
       var negate = false;
       var disabled = true;
+      var indexId = (typeof this.$parent.dash !== 'undefined' ? this.$parent.dash.searchSource.get('index').id :
+        this.$parent.$parent.dash.searchSource.get('index').id);
       var filter = { meta: { disabled:disabled, negate: negate,
-                             index: this.$parent.dash.searchSource.get('index').id }, query: { match: {} } };
+                             index: indexId}, query: { match: {} } };
       ++counter;
       var key = 'Enter Column Name' + counter;
       var value = 'Enter Column Value' + counter;
