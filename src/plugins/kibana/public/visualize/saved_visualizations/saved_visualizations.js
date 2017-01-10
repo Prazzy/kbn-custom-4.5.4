@@ -84,7 +84,7 @@ define(function (require) {
           query: {
             simple_query_string: {
               query: searchString + '*',
-              fields: ['title^3', 'description'],
+              fields: ['title^3', 'description', 'savedSearchId'],
               default_operator: 'AND'
             }
           }
