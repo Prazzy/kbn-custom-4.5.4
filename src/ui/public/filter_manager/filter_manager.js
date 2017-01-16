@@ -24,6 +24,7 @@ define(function (require) {
           }
 
           if (filter.query) {
+            if (filter.query.query_string) return false;
             return filter.query.match[fieldName] && filter.query.match[fieldName].query === value;
           }
 
