@@ -83,12 +83,42 @@ define(function (require) {
         body = {
           query: {
             simple_query_string: {
-              query: searchString + '*',
-              fields: ['title^3', 'description', 'savedSearchId'],
-              default_operator: 'AND'
+            bool: {
+              should: [
+                {
+                  query: {
+                    query_string: {
+                      query: '_id:' + searchString + '*'
+                    }
+                  }
+                },
+                {
+                  query: {
+                    wildcard: {
+                      title: '*' + searchString + '*'
+                    }
+                  }
+                },
+                {
+                  query: {
+                    wildcard: {
+                      savedSearchId: '*' + searchString + '*'
+                    }
+                  }
+                }
+              ]
             }
           }
         };
+        // body = {
+        //   query: {
+        //     simple_query_string: {
+        //       query: searchString + '*',
+        //       fields: ['title^3', 'description', 'savedSearchId'],
+        //       default_operator: 'AND'
+        //     }
+        //   }
+        // };
       } else {
         body = { query: {match_all: {}}};
       }
