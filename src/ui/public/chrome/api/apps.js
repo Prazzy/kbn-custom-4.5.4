@@ -26,6 +26,15 @@ module.exports = function (chrome, internals) {
     return internals.showAppsLink == null ? internals.nav.length > 1 : internals.showAppsLink;
   };
 
+  chrome.setPACEmbedURL = function (val) {
+    internals.showPACEmbedURL = !!val;
+    return chrome;
+  };
+
+  chrome.getPACEmbedURL = function () {
+    return internals.showPACEmbedURL == null ? false : internals.showPACEmbedURL;
+  };
+
   chrome.getApp = function () {
     return clone(internals.app);
   };
