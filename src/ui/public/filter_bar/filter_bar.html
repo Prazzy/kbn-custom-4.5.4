@@ -3,6 +3,7 @@
   </form>
 </div>
 
+<span ng-if="!showPACEmbedURL">
 <div class="bar">
   <span ng-repeat="filter in filters">
   <div class="filter" ng-class="{ negate: filter.meta.negate, disabled: filter.meta.disabled }" ng-if="!filter.meta.hide">
@@ -86,7 +87,7 @@
 
   <div class="filter-link">
     <div class="filter-description small">
-      <a class="btn btn-xs add-filter-btn" ng-if="showAddNewFilter">
+      <a class="btn btn-xs add-filter-btn" ng-if="isAddNewFilterVisible">
         <i ng-click="addNewFilter()" class="fa fa-fw fa-plus-circle"></i>
       </a>
     </div>
@@ -121,3 +122,4 @@
     </div>
   </div>
 </div>
+</span>
