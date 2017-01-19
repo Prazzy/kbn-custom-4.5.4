@@ -3,7 +3,6 @@ define(function (require) {
     .get('kibana')
     .filter('displayFilter', function () {
       return function (filter) {
-        console.log(filter);
         return filter.meta.key;
       };
     });
