@@ -197,7 +197,8 @@ define(function (require) {
           }, {});
           //let old_fields = $scope.indexFieldNames;
           //$scope.indexFieldNames = _.merge(old_fields, Object.keys(indexFields).sort());
-          $scope.indexFieldNames.push(Object.keys(indexFields).sort());
+          //$scope.indexFieldNames.push(Object.keys(indexFields).sort());
+          $scope.indexFieldNames = indexFields;
           });
         };
 
@@ -273,7 +274,7 @@ define(function (require) {
           });
         };
 
-        $scope.parsePanelVis();
+        if (!$scope.state.options.savedSearchOnly) $scope.parsePanelVis();
         $scope.parsePanelSearches();
         // PAC Feature: collect all index fields added to a dashboard
 
@@ -290,9 +291,10 @@ define(function (require) {
           // PAC Feature: collect all index fields added to a dashboard
           //if (_.find($state.panels, {type: 'search'})) $state.options['fields'] =
           // angular.toJson(_.find($state.panels, {type: 'search'}).columns);
-          $state.options.fields = _.uniq(_.flatten($scope.indexFieldNames)).sort();
-          // PAC Feature: collect all index fields added to a dashboard
+          //$state.options.fields = _.uniq(_.flatten($scope.indexFieldNames)).sort();
+          if ($state.options.rebuildIndexFieldsList) $state.options.fields = $scope.indexFieldNames;
           dash.optionsJSON = angular.toJson($state.options);
+          // PAC Feature: collect all index fields added to a dashboard
 
           dash.save()
           .then(function (id) {
