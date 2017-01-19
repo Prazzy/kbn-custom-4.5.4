@@ -82,7 +82,6 @@ define(function (require) {
       if (searchString) {
         body = {
           query: {
-            simple_query_string: {
             bool: {
               should: [
                 {
