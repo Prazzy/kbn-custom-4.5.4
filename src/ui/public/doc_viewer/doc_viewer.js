@@ -31,10 +31,15 @@ define(function (require) {
           $scope.flattened = $scope.indexPattern.flattenHit($scope.hit);
           $scope.hitJson = angular.toJson($scope.hit, true);
           $scope.formatted = $scope.indexPattern.formatHit($scope.hit);
-          // show only fields of saved search in doc viewer
-          //$scope.fields = _.keys($scope.flattened).sort();
           $scope.fields = $scope.columns;
-
+          // show only fields of saved search in doc viewer
+          if ($scope.$root.chrome.getActiveTabId()) {
+            if ($scope.$root.chrome.getActiveTabId() !== 'dashboard') $scope.fields = _.keys($scope.flattened).sort();
+          } else if ($scope.$root.chrome.getInjected().kbnDefaultAppId) {
+            if ($scope.$root.chrome.getInjected().kbnDefaultAppId !== 'dashboard') $scope.fields = _.keys($scope.flattened).sort();
+          } else {
+            $scope.fields = $scope.columns;
+          }
           $scope.toggleColumn = function (fieldName) {
             _.toggleInOut($scope.columns, fieldName);
           };
