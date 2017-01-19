@@ -129,9 +129,25 @@
 
             <div class="fe-query-container">
               <input
+                ng-if="subclause!='range'"
                 ng-model="value"
                 ng-change="changeValue(value, expression, expression_index)"
-                class="fe-query form-control" />
+                class="fe-query form-control" 
+                pac-input-datetime />
+              <input
+                ng-if="subclause=='range'"
+                ng-model="value.gte"
+                placeholder="Enter FROM Value"
+                ng-change="changeValue(value, expression, expression_index)"
+                class="fe-query1 form-control" 
+                pac-input-datetime />  
+              <input
+                ng-if="subclause=='range'"
+                ng-model="value.lte"
+                placeholder="Enter TO Value"
+                ng-change="changeValue(value, expression, expression_index)"
+                class="fe-query2 form-control" 
+                pac-input-datetime />    
             </div>
           </div>
         </div>
@@ -165,7 +181,8 @@
               <input
                 ng-model="value"
                 ng-change="changeValue(value, expression, expression_index)"
-                class="fe-query form-control" />
+                class="fe-query form-control" 
+                pac-input-datetime />
             </div>
           </div>
         </div>
@@ -177,6 +194,7 @@
       </div>
     </span>
   </span>
+</div>
 </div>
 
 <!-- <div class="row">
