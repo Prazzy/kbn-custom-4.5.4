@@ -44,7 +44,20 @@ define(function (require) {
 
         $scope.state = getAppState();
         $scope.editor = 'visual';
-        $scope.showAddNewFilter = true;
+        $scope.showPACEmbedURL = $scope.$root.chrome.getPACEmbedURL();
+        $scope.isAddNewFilterVisible = true;
+        $scope.showAddNewFilter = function (value) {
+          if ($scope.$root.chrome.getActiveTabId()) {
+            if ($scope.$root.chrome.getActiveTabId() !== 'dashboard') return $scope.isAddNewFilterVisible = false;
+          } else {
+            if ($scope.$root.chrome.getInjected().kbnDefaultAppId) {
+              if ($scope.$root.chrome.getInjected().kbnDefaultAppId !== 'dashboard') return $scope.isAddNewFilterVisible = false;
+            }
+          }
+          if (!value) return $scope.isAddNewFilterVisible = false;
+          return $scope.isAddNewFilterVisible = true;
+        };
+        $scope.showAddNewFilter(true);
 
         $scope.aceLoaded = function (editor) {
           editor.$blockScrolling = Infinity;
@@ -65,7 +78,7 @@ define(function (require) {
         };
 
         $scope.startEditingFilter = function (source) {
-          $scope.showAddNewFilter = false;
+          $scope.showAddNewFilter(false);
           return $scope.editingFilter = {
             source: source,
             type: _.findKey(source, function (val, key) {
@@ -78,7 +91,7 @@ define(function (require) {
 
         $scope.stopEditingFilter = function () {
           $scope.editingFilter = null;
-          $scope.showAddNewFilter = true;
+          $scope.showAddNewFilter(true);
         };
 
         $scope.editDone = function () {
