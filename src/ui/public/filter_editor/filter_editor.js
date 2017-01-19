@@ -2,6 +2,8 @@ var angular = require('angular');
 var template = require('ui/filter_editor/filter_editor.html');
 var _ = require('lodash');
 var module = require('ui/modules').get('kibana');
+require('ui/directives/pac_input_datetime');
+
 
 /**
  * Notes:
@@ -19,28 +21,35 @@ module.directive('filterEditor', function ($route, courier) {
       indexPattern: '='
     },
     link: function ($scope) {
+      $scope.showFilterHelp = false;
       $scope.indexFields = {};
       $scope.indexFieldNames = [];
-      // ugly code, needs to be refactored..
-      if (JSON.parse($scope.$parent.$parent.$parent.$parent.dash.optionsJSON).fields) {
-        $scope.indexFieldNames = JSON.parse($scope.$parent.$parent.$parent.$parent.dash.optionsJSON).fields;
+      $scope.fieldOutput = '';
+      $scope.fieldDataType = 'datetime';
+      $scope.filedTypes = {};
+
+      if ($scope.$root.chrome.getActiveTabId() === 'dashboard') {
+        // ugly code, needs to be refactored..
+        if (JSON.parse($scope.$parent.$parent.$parent.$parent.dash.optionsJSON).fields) {
+          $scope.indexFields = JSON.parse($scope.$parent.$parent.$parent.$parent.dash.optionsJSON).fields;
+          $scope.indexFieldNames = Object.keys($scope.indexFields).sort();
+        }
+      } else {
+        courier.indexPatterns.get($scope.indexPattern).then(function (index) {
+          $scope.indexFields = index.fields.reduce(function (fields, field) {
+            if (field.filterable === true) {
+              fields[field.name] = field.type;
+            }
+
+            return fields;
+          }, {});
+
+          $scope.indexFieldNames = Object.keys($scope.indexFields).sort();
+        });
       }
 
-      // commented below code as
-      // courier.indexPatterns.get($scope.indexPattern).then(function (index) {
-      //   $scope.indexFields = index.fields.reduce(function (fields, field) {
-      //     if (field.filterable === true) {
-      //       fields[field.name] = field.type;
-      //     }
-
-      //     return fields;
-      //   }, {});
-
-      //   $scope.indexFieldNames = Object.keys($scope.indexFields).sort();
-      // });
-
       //$scope.clauses = { Equals: 'must', 'Does Not Equal': 'must_not'};
-      $scope.clauses = { Equals: 'must', 'Begins With': 'prefix', Contains: 'wildcard', Regex: 'regexp'};
+      $scope.clauses = { Equals: 'must', 'Begins With': 'prefix', Contains: 'wildcard', Regex: 'regexp', Range: 'range'};
       //$scope.types = { match: 'keyword', term: 'exact' };
       $scope.filterType = 'term';
 
@@ -92,11 +101,18 @@ module.directive('filterEditor', function ($route, courier) {
        */
 
       $scope.changeClause = function (fromClause, toClause, expression, index) {
-        if (fromClause === 'must') var fromValue = expression.bool[fromClause].term;
-        if (fromClause === 'prefix') var fromValue = expression.query.prefix;
-        if (fromClause === 'wildcard') var fromValue = expression.query.wildcard;
-        if (fromClause === 'regexp') var fromValue = expression.query.regexp;
-        var key;
+        let fromValue;
+        let key;
+        if (fromClause === 'must') fromValue = expression.bool[fromClause].term;
+        if (fromClause === 'prefix') fromValue = expression.query.prefix;
+        if (fromClause === 'wildcard') fromValue = expression.query.wildcard;
+        if (fromClause === 'regexp') fromValue = expression.query.regexp;
+        if (fromClause === 'range') {
+          fromValue = expression.query.range;
+          key = Object.keys(expression.query.range)[0];
+          fromValue[key] = expression.query.range[key].gte.replace(/\*/g, '');
+        }
+
         if (toClause === 'prefix') {
           var prefixExpression = { query: { prefix: {}}};
           key = Object.keys(fromValue)[0];
@@ -112,13 +128,20 @@ module.directive('filterEditor', function ($route, courier) {
         } else if (toClause === 'regexp') {
           var regexpExpression = { query: { regexp: {}}};
           key = Object.keys(fromValue)[0];
-          fromValue[key] = fromValue[key];
+          fromValue[key] = fromValue[key].replace(/\*/g, '');
           regexpExpression.query.regexp = fromValue;
           $scope.filter.bool.should[index] = angular.copy(regexpExpression);
+        } else if (toClause === 'range') {
+          var rangeExpression = { query: { range: {}}};
+          key = Object.keys(fromValue)[0];
+          rangeExpression.query.range[key] = {'gte': fromValue[key].toString().replace(/\*/g, '')};
+          $scope.filter.bool.should[index] = angular.copy(rangeExpression);
         } else {
           var boolExpression = { bool: {} };
-          key = Object.keys(fromValue)[0];
-          fromValue[key] = fromValue[key].replace(/\*/g, '');
+          if (!key) {
+            key = Object.keys(fromValue)[0];
+            fromValue[key] = fromValue[key].replace(/\*/g, '');
+          }
           boolExpression.bool[toClause] = { term: fromValue};
           $scope.filter.bool.should[index] = angular.copy(boolExpression);
         }
@@ -133,6 +156,9 @@ module.directive('filterEditor', function ($route, courier) {
        */
 
       $scope.changeValue = function (newValue, expression, index) {
+        if (newValue.lte === '') delete newValue.lte;
+        if (newValue.gte === '') delete newValue.gte;
+
         var key;
         if (expression.bool) {
           key = Object.keys(expression.bool.must.term)[0];
@@ -183,6 +209,11 @@ module.directive('filterEditor', function ($route, courier) {
               value = filter.query.regexp[key];
               filter.query.regexp[newField] = value;
               delete filter.query.regexp[key];
+            } else if (filter.query.range) {
+              key = Object.keys(filter.query.range)[0];
+              value = filter.query.range[key];
+              filter.query.range[newField] = value;
+              delete filter.query.range[key];
             }
           }
         });
