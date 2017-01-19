@@ -44,5 +44,17 @@
         Publish to Customers?
       </label>
     </div>
+    <div class="input-group">
+      <label>
+        <input type="checkbox" ng-model="opts.ui.rebuildIndexFieldsList" ng-checked="opts.ui.rebuildIndexFieldsList">
+        Rebuild Index Fields List?
+      </label>
+    </div>    
+    <div class="input-group">
+      <label>
+        <input type="checkbox" ng-model="opts.ui.savedSearchOnly" ng-checked="opts.ui.savedSearchOnly">
+        Use Only Saved Search Columns/Fields To Rebuild Index Fields List? (Default uses everything including visualizations)
+      </label>
+    </div>  
   </p>
 </form>
