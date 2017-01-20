@@ -26,6 +26,7 @@ define(function (require) {
       },
       controllerAs: 'docTableCSV',
       controller: function ($scope) {
+        $scope.showSpinner = false;
         var SearchSource = Private(require('ui/courier/data_source/search_source'));
         var self = this;
 
@@ -36,6 +37,7 @@ define(function (require) {
         };
 
         self.exportAsCsv = function (formatted) {
+          $scope.showSpinner = true;
           var searchSource = new SearchSource();
           searchSource.set('filter', $scope.searchSource.getOwn('filter')); 
           searchSource.set('query', $scope.searchSource.getOwn('query'));
@@ -47,6 +49,7 @@ define(function (require) {
             if ($scope.searchSource !== $scope.searchSource) return;
 
             var csv = new Blob([self.toCsv(formatted, resp.hits.hits)], { type: 'text/plain' });
+            $scope.showSpinner = false;
             self._saveAs(csv, 'download.csv');
 
           }).catch(notify.fatal);
@@ -74,8 +77,9 @@ define(function (require) {
           }).join(","));
 
           _.forEach(rows, function (row) {
+            row = $scope.indexPattern.formatHit(row);
             csv.push(_.map(columns, function (col) {
-              return escape(row._source[col]);
+              return escape(row[col]);
             }).join(","));
           });
           return csv.join("\r\n") + "\r\n";
