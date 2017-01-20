@@ -1,7 +1,7 @@
 define(function (require) {
   var _ = require('lodash');
 
-  return function (Private, $rootScope, getAppState, globalState) {
+  return function (Private, $rootScope, getAppState, globalState, $route) {
     var EventEmitter = Private(require('ui/events'));
     var onlyDisabled = require('ui/filter_bar/lib/onlyDisabled');
     var onlyStateChanged = require('ui/filter_bar/lib/onlyStateChanged');
@@ -117,8 +117,8 @@ define(function (require) {
 
       var negate = false;
       var disabled = true;
-      var indexId = (typeof this.$parent.dash !== 'undefined' ? this.$parent.dash.searchSource.get('index').id :
-        this.$parent.$parent.dash.searchSource.get('index').id);
+      var dash = $route.current.locals.dash;
+      var indexId = dash.searchSource.get('index').id;
       var filter = { meta: { disabled:disabled, negate: negate,
                              index: indexId}, query: { match: {} } };
       ++counter;
