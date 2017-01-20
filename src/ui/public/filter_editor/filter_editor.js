@@ -29,9 +29,10 @@ module.directive('filterEditor', function ($route, courier) {
       $scope.filedTypes = {};
 
       if ($scope.$root.chrome.getActiveTabId() === 'dashboard') {
+        var dash = $route.current.locals.dash;
         // ugly code, needs to be refactored..
-        if (JSON.parse($scope.$parent.$parent.$parent.$parent.dash.optionsJSON).fields) {
-          $scope.indexFields = JSON.parse($scope.$parent.$parent.$parent.$parent.dash.optionsJSON).fields;
+        if (JSON.parse(dash.optionsJSON).fields) {
+          $scope.indexFields = JSON.parse(dash.optionsJSON).fields;
           $scope.indexFieldNames = Object.keys($scope.indexFields).sort();
         }
       } else {
