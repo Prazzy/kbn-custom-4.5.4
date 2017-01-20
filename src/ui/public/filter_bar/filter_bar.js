@@ -48,7 +48,7 @@ define(function (require) {
         $scope.isAddNewFilterVisible = true;
         $scope.showAddNewFilter = function (value) {
           if ($scope.$root.chrome.getActiveTabId()) {
-            if ($scope.$root.chrome.getActiveTabId() !== 'dashboard') return $scope.isAddNewFilterVisible = false;
+            if (!$scope.$root.chrome.getActiveTabId().startsWith('dashboard')) return $scope.isAddNewFilterVisible = false;
           } else {
             if ($scope.$root.chrome.getInjected().kbnDefaultAppId) {
               if ($scope.$root.chrome.getInjected().kbnDefaultAppId !== 'dashboard') return $scope.isAddNewFilterVisible = false;

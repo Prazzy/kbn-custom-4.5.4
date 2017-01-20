@@ -34,7 +34,7 @@ define(function (require) {
           $scope.fields = $scope.columns;
           // show only fields of saved search in doc viewer
           if ($scope.$root.chrome.getActiveTabId()) {
-            if ($scope.$root.chrome.getActiveTabId() !== 'dashboard') $scope.fields = _.keys($scope.flattened).sort();
+            if (!$scope.$root.chrome.getActiveTabId().startsWith('dashboard')) $scope.fields = _.keys($scope.flattened).sort();
           } else if ($scope.$root.chrome.getInjected().kbnDefaultAppId) {
             if ($scope.$root.chrome.getInjected().kbnDefaultAppId !== 'dashboard') $scope.fields = _.keys($scope.flattened).sort();
           } else {
