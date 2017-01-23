@@ -28,7 +28,7 @@ module.directive('filterEditor', function ($route, courier) {
       $scope.fieldDataType = 'datetime';
       $scope.filedTypes = {};
 
-      if ($scope.$root.chrome.getActiveTabId().startsWith('dashboard')) {
+      if ($scope.$root.chrome.getActiveTabId() && $scope.$root.chrome.getActiveTabId().startsWith('dashboard')) {
         var dash = $route.current.locals.dash;
         if (JSON.parse(dash.optionsJSON).fields) {
           $scope.indexFields = JSON.parse(dash.optionsJSON).fields;
