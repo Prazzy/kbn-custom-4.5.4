@@ -67,7 +67,7 @@ define(function (require) {
           timefilter.time.to = dash.timeTo;
           timefilter.time.from = dash.timeFrom;
           if (dash.refreshInterval) {
-           timefilter.refreshInterval = dash.refreshInterval;
+            timefilter.refreshInterval = dash.refreshInterval;
           }
         }
 
@@ -92,6 +92,7 @@ define(function (require) {
         };
 
         const $state = $scope.state = new AppState(stateDefaults);
+        $state.options.rebuildIndexFieldsList = true;
         const $uiState = $scope.uiState = $state.makeStateful('uiState');
 
         $scope.$watchCollection('state.options', function (newVal, oldVal) {
@@ -189,16 +190,16 @@ define(function (require) {
         $scope.searches = [];
         $scope.getIndexFieldNames = function (indexPattern) {
           courier.indexPatterns.get(indexPattern).then(function (index) {
-          let indexFields = index.fields.reduce(function (fields, field) {
-            if (field.filterable === true) {
-              fields[field.name] = field.type;
-            }
-            return fields;
-          }, {});
-          //let old_fields = $scope.indexFieldNames;
-          //$scope.indexFieldNames = _.merge(old_fields, Object.keys(indexFields).sort());
-          //$scope.indexFieldNames.push(Object.keys(indexFields).sort());
-          $scope.indexFieldNames = indexFields;
+            let indexFields = index.fields.reduce(function (fields, field) {
+              if (field.filterable === true) {
+                fields[field.name] = field.type;
+              }
+              return fields;
+            }, {});
+            //let old_fields = $scope.indexFieldNames;
+            //$scope.indexFieldNames = _.merge(old_fields, Object.keys(indexFields).sort());
+            //$scope.indexFieldNames.push(Object.keys(indexFields).sort());
+            $scope.indexFieldNames = indexFields;
           });
         };
 
