@@ -77,9 +77,9 @@ define(function (require) {
           }).join(","));
 
           _.forEach(rows, function (row) {
-            row = $scope.indexPattern.formatHit(row);
+            //row = $scope.indexPattern.formatHit(row);
             csv.push(_.map(columns, function (col) {
-              return escape(row[col]);
+              return escape(row._source[col]);
             }).join(","));
           });
           return csv.join("\r\n") + "\r\n";
