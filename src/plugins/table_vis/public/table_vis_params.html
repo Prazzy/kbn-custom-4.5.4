@@ -1,3 +1,33 @@
+<!-- Formula -->
+<div class="form-group">
+  <label>
+    <input type="checkbox"
+    name="beam.enabled"
+    ng-model="vis.params.formulaEnabled"> 
+    Custom Extended Metric
+  </label>
+</div>
+<div ng-show="vis.params.formulaEnabled" class="well">
+    <div class="form-group">
+      <label>Metrics 
+        <kbn-info info="List out metrics to be used in the formula; use comma separeted metric labels with no space."></kbn-info>
+      </label>
+      <input type="text" ng-model="vis.params.formulaCols" class="form-control" placeholder="User Count,Flight Count" />
+    </div>
+    <div class="form-group">
+      <label>Formula</label>
+      <kbn-info info="metrics['User Count'].value / metrics['Flight Count'].value * 100"></kbn-info>
+      <input type="text" ng-model="vis.params.formula" class="form-control" placeholder="metrics['User Count'].value / metrics['Flight Count'].value * 100" />
+    </div>
+    <div class="form-group">
+      <label>Custom Label</label>
+      <div>
+        <input type="text" ng-model="vis.params.formulaLabel" class="form-control ng-pristine ng-untouched ng-valid" placeholder="Avg Users/Flight">
+      </div>
+    </div>
+</div>
+<!-- Formula -->
+<hr>
 <div class="form-group">
   <label>Per Page</label>
   <input type="number" ng-model="vis.params.perPage" class="form-control">
