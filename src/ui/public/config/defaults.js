@@ -117,6 +117,10 @@ define(function (require) {
         value: '2s',
         description: 'Time to wait before dimming visualizations during query'
       },
+      'csv:rowsCount': {
+        value: 10000,
+        description: 'The number of rows to be downloaded in csv exports. Make sure max_result_window is set to the value specified here.',
+      },
       'csv:separator': {
         value: ',',
         description: 'Separate exported values with this string',

@@ -41,7 +41,7 @@ define(function (require) {
           var searchSource = new SearchSource();
           searchSource.set('filter', $scope.searchSource.getOwn('filter')); 
           searchSource.set('query', $scope.searchSource.getOwn('query'));
-          searchSource.size(50000);
+          searchSource.size(config.get('csv:rowsCount'));
           searchSource.index($scope.searchSource.get('index'));
           searchSource.onResults().then(function onResults(resp) {
 
