@@ -1,5 +1,6 @@
 define(function (require) {
   const _ = require('lodash');
+  const numeral = require('numeral');
   // get the kibana/table_vis module, and make sure that it requires the "kibana" module if it
   // didn't already
   const module = require('ui/modules').get('kibana/table_vis', ['kibana']);
@@ -77,7 +78,7 @@ define(function (require) {
             let computedValue;
             try {
               const func = Function('metrics', 'return ' + formula);
-              computedValue = func(metrics);
+              computedValue = numeral(func(metrics)).format($scope.vis.params.outputNumberFormat);
             } catch (e) {
               computedValue = '';
             }

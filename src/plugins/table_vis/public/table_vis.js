@@ -36,7 +36,8 @@ define(function (require) {
         defaults: {
           perPage: 10,
           showPartialRows: false,
-          showMeticsAtAllLevels: false
+          showMeticsAtAllLevels: false,
+          outputNumberFormat: 0.00
         },
         editor: '<table-vis-params></table-vis-params>'
       },
