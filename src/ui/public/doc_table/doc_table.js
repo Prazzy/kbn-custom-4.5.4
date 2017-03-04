@@ -79,6 +79,7 @@ define(function (require) {
           _.forEach(rows, function (row) {
             //row = $scope.indexPattern.formatHit(row);
             csv.push(_.map(columns, function (col) {
+              if (row._source[col] === undefined) return "";
               return escape(row._source[col]);
             }).join(","));
           });
