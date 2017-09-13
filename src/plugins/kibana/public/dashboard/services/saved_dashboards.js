@@ -62,7 +62,7 @@ define(function (require) {
       return source;
     };
 
-    this.find = function (searchString, size = 100) {
+    this.find = function (searchString, size = 1000) {
       let body;
       if (searchString) {
         body = {
